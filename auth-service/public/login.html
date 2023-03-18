@@ -1,0 +1,43 @@
+<!-- public/login.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EGS Auth</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+    <!-- load bulma css -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- load fontawesome -->
+    <style>
+      body {
+        padding-top: 70px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1><span class="fa fa-lock"></span> Authentication Service</h1>
+      <br />
+      <span class="fa fa-home"> <a href="/">Go back to home page</a></span>
+      <br />
+      <span class="fa fa-sign-in">
+        <a href="/auth/email">Login with email</a>
+      </span>
+      <br />
+
+      <a class="btn btn-danger" href="/auth/google" target="_blank">
+        <span class="fa fa-google"> Login with google </span>
+      </a>
+
+      <a class="btn btn-primary" href="/auth/facebook" target="_blank">
+        <span class="fa fa-facebook"> Login with facebook </span>
+      </a>
+    </div>
+  </body>
+</html>

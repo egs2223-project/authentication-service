@@ -1,24 +1,31 @@
 {
-  "name": "auth-service",
-  "version": "0.0.0",
-  "private": true,
+  "name": "oauth-using-node-and-express",
+  "version": "1.0.0",
+  "description": "A demo project testing the functionality of OAuth in Node &amp; Express web apps",
+  "main": "index.js",
   "scripts": {
-    "start": "node ./bin/www"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rustyonrampage/oauth-using-node-and-express.git"
+  },
+  "author": "Asad Jakhar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rustyonrampage/oauth-using-node-and-express/issues"
+  },
+  "homepage": "https://github.com/rustyonrampage/oauth-using-node-and-express#readme",
   "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
-    "ejs": "^3.1.8",
     "express": "^4.18.2",
-    "express-jwt": "^8.4.1",
     "express-session": "^1.17.3",
-    "google-auth-library": "^8.7.0",
-    "googleapis": "^112.0.0",
-    "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.0",
-    "morgan": "~1.9.1",
     "passport": "^0.6.0",
-    "passport-google-oauth": "^2.0.0"
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.1"
   }
 }

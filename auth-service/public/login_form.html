@@ -1,0 +1,48 @@
+<!-- public/login_form.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EGS Home</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+    <!-- load bulma css -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- load fontawesome -->
+    <style>
+      body {
+        padding-top: 70px;
+      }
+      .btn-primary {
+        width: 20%;
+      }
+      .form-control {
+        width: 50%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <form method="POST">
+        Email:<input
+          type="text"
+          class="form-control"
+          name="email"
+          placeholder="test@gmail.com"
+        /><br />
+        Password:<input
+          type="password"
+          class="form-control"
+          name="password"
+          placeholder="1234"
+        /><br />
+        <input type="submit" class="btn btn-primary" value="Submit" />
+      </form>
+    </div>
+  </body>
+</html>
