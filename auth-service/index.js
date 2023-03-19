@@ -19,7 +19,7 @@ app.use(
   session({
     resave: false,
     saveUninitialized: true,
-    secret: "secret",
+    secret: process.env["JWT_SECRET"],
   })
 );
 
@@ -35,14 +35,14 @@ opts.jwtFromRequest = function (req) {
   }
   return token;
 };
-opts.secretOrKey = "secret";
+opts.secretOrKey = process.env["JWT_SECRET"];
 
 passport.use(
   new JwtStrategy(opts, function (jwt_payload, done) {
     console.log("JWT BASED  VALIDATION GETTING CALLED");
     console.log("JWT", jwt_payload);
-    if (CheckUser(jwt_payload.data)) {
-      return done(null, jwt_payload.data);
+    if (CheckUser(jwt_payload)) {
+      return done(null, jwt_payload);
     } else {
       // user account doesnt exists in the DATA
       return done(null, false);
@@ -105,11 +105,11 @@ app.get("/auth/email", (req, res) => {
 
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { scope: ["profile", "email"], state: "redirectUrlHere" })
 );
 app.get(
   "/auth/facebook",
-  passport.authenticate("facebook", { scope: "email" })
+  passport.authenticate("facebook", { scope: "email", state: "redirectUrlHere" })
 );
 
 app.post("/auth/email", (req, res) => {
@@ -118,7 +118,7 @@ app.post("/auth/email", (req, res) => {
       {
         data: req.body,
       },
-      "secret",
+      process.env["JWT_SECRET"],
       { expiresIn: "1h" }
     );
     res.cookie("jwt", token);
@@ -152,13 +152,18 @@ app.get(
     FindOrCreate(user);
     let token = jwt.sign(
       {
-        data: user,
+        displayName: user.displayName,
+        name: user.name,
+        email: user.email,
+        provider: user.provider,
+        iss: process.env["ISSUER"],
+        aud: process.env["AUDIENCE"]
       },
-      "secret",
+      process.env["JWT_SECRET"],
       { expiresIn: "1h" }
     );
     res.cookie("jwt", token);
-    res.redirect("/");
+    res.redirect(req.query.state);
   }
 );
 app.get(
@@ -177,13 +182,18 @@ app.get(
     FindOrCreate(user);
     let token = jwt.sign(
       {
-        data: user,
+        displayName: user.displayName,
+        name: user.name,
+        email: user.email,
+        provider: user.provider,
+        iss: process.env["AUDIENCE"],
+        aud: process.env["ISSUER"]
       },
-      "secret",
-      { expiresIn: 60 }
+      process.env["JWT_SECRET"],
+      { expiresIn: "1h" }
     );
     res.cookie("jwt", token);
-    res.redirect("/");
+    res.redirect(req.query.state);
   }
 );
 
@@ -213,5 +223,5 @@ function CheckUser(input) {
 }
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log(`Sever EGS listening on port ${port}`);
+  console.log(`Server EGS listening on port ${port}`);
 });
