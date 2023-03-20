@@ -96,6 +96,12 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+  if(!req.query.redirect_url) {
+    res.status(400);
+    res.send('redirect_url query parameter missing');
+    return;
+  }
+  res.cookie("redirect_url", req.query.redirect_url);
   res.sendFile("login.html", { root: __dirname + "/public" });
 });
 
@@ -104,13 +110,28 @@ app.get("/auth/email", (req, res) => {
 });
 
 app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"], state: "redirectUrlHere" })
+  "/auth/google", GoogleAuthenticator, function(req, res) {}
 );
+
+function GoogleAuthenticator(req, res, next){
+  passport.authenticate("google",{
+      scope: ["profile", "email"],
+      state: req.cookies["redirect_url"]
+  })(req, res, next);
+  //^ call the middleware returned by passport.authenticate
+  // https://stackoverflow.com/a/27318966
+}
+
 app.get(
-  "/auth/facebook",
-  passport.authenticate("facebook", { scope: "email", state: "redirectUrlHere" })
+  "/auth/facebook", FacebookAuthenticator, function(req, res) {}
 );
+
+function FacebookAuthenticator(req, res, next){
+  passport.authenticate("facebook",{
+      scope: "email",
+      state: req.cookies["redirect_url"]
+  })(req, res, next);
+}
 
 app.post("/auth/email", (req, res) => {
   if (CheckUser(req.body)) {
