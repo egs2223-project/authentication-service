@@ -82,12 +82,12 @@ passport.use(
 );
 
 passport.serializeUser(function (user, cb) {
-  console.log("I should have jack ");
+  console.log("I should have to do that");
   cb(null, user);
 });
 
 passport.deserializeUser(function (obj, cb) {
-  console.log("I wont have jack shit");
+  console.log("I wont have to do that");
   cb(null, obj);
 });
 
@@ -96,9 +96,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  if(!req.query.redirect_url) {
+  if (!req.query.redirect_url) {
     res.status(400);
-    res.send('redirect_url query parameter missing');
+    res.send("redirect_url query parameter missing");
     return;
   }
   res.cookie("redirect_url", req.query.redirect_url);
@@ -109,27 +109,23 @@ app.get("/auth/email", (req, res) => {
   res.sendFile("login_form.html", { root: __dirname + "/public" });
 });
 
-app.get(
-  "/auth/google", GoogleAuthenticator, function(req, res) {}
-);
+app.get("/auth/google", GoogleAuthenticator, function (req, res) {});
 
-function GoogleAuthenticator(req, res, next){
-  passport.authenticate("google",{
-      scope: ["profile", "email"],
-      state: req.cookies["redirect_url"]
+function GoogleAuthenticator(req, res, next) {
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    state: req.cookies["redirect_url"],
   })(req, res, next);
   //^ call the middleware returned by passport.authenticate
   // https://stackoverflow.com/a/27318966
 }
 
-app.get(
-  "/auth/facebook", FacebookAuthenticator, function(req, res) {}
-);
+app.get("/auth/facebook", FacebookAuthenticator, function (req, res) {});
 
-function FacebookAuthenticator(req, res, next){
-  passport.authenticate("facebook",{
-      scope: "email",
-      state: req.cookies["redirect_url"]
+function FacebookAuthenticator(req, res, next) {
+  passport.authenticate("facebook", {
+    scope: "email",
+    state: req.cookies["redirect_url"],
   })(req, res, next);
 }
 
@@ -178,7 +174,7 @@ app.get(
         email: user.email,
         provider: user.provider,
         iss: process.env["ISSUER"],
-        aud: process.env["AUDIENCE"]
+        aud: process.env["AUDIENCE"],
       },
       process.env["JWT_SECRET"],
       { expiresIn: "1h" }
@@ -208,7 +204,7 @@ app.get(
         email: user.email,
         provider: user.provider,
         iss: process.env["AUDIENCE"],
-        aud: process.env["ISSUER"]
+        aud: process.env["ISSUER"],
       },
       process.env["JWT_SECRET"],
       { expiresIn: "1h" }
