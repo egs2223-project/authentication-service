@@ -138,7 +138,7 @@ app.post("/auth/email", (req, res) => {
       process.env["JWT_SECRET"],
       { expiresIn: "1h" }
     );
-    res.cookie("jwt", token);
+    res.cookie("jwt", token, { sameSite: 'none', secure: true});
     res.send(`Log in success ${req.body.email}`);
   } else {
     res.send("Invalid login credentials");
@@ -179,7 +179,7 @@ app.get(
       process.env["JWT_SECRET"],
       { expiresIn: "1h" }
     );
-    res.cookie("jwt", token);
+    res.cookie("jwt", token, { sameSite: 'none', secure: true});
     res.redirect(req.query.state);
   }
 );
@@ -209,7 +209,7 @@ app.get(
       process.env["JWT_SECRET"],
       { expiresIn: "1h" }
     );
-    res.cookie("jwt", token);
+    res.cookie("jwt", token, { sameSite: 'none', secure: true});
     res.redirect(req.query.state);
   }
 );
