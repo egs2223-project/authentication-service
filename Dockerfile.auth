@@ -1,0 +1,31 @@
+#To build: docker build -t egs-authentication-svc -f Dockerfile.auth .
+#To add to registry: sudo docker push jmuachifi/egs-authentication-svc:latest
+
+FROM node:latest
+
+LABEL maintainer="Jodionisio Muachifi"
+LABEL ua="Universidade de Aveiro"
+LABEL curso="MECT"
+LABEL project="EGS-Agendamento de consultas Online"
+LABEL service="Google,Facebook Authentication"
+
+# Create app directory
+RUN mkdir /auth-service
+WORKDIR /auth-service
+
+RUN apt-get update && apt-get install -y netcat-openbsd
+
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY ./auth-service/package.json ./auth-service/package-lock.json ./
+COPY ./auth-service/index.js  ./auth-service/public/  ./auth-service/.env ./auth-service/
+
+RUN npm install 
+
+# If you are building your code for production
+# RUN npm ci --only=production
+
+COPY ./auth-service .
+
+EXPOSE 5000
+ENTRYPOINT ["node", "index.js"]
