@@ -1,7 +1,7 @@
 #To build: docker build -t egs-authentication-svc -f Dockerfile.auth .
 #To add to registry: sudo docker push jmuachifi/egs-authentication-svc:latest
 
-FROM node:latest
+FROM node:alpine
 
 LABEL maintainer="Jodionisio Muachifi"
 LABEL ua="Universidade de Aveiro"
@@ -13,7 +13,7 @@ LABEL service="Google,Facebook Authentication"
 RUN mkdir /auth-service
 WORKDIR /authentication-service/auth-service
 
-RUN apt-get update && apt-get install -y netcat-openbsd
+RUN apk update && apk upgrade && apk add --no-cache netcat-openbsd
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
