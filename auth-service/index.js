@@ -19,7 +19,7 @@ app.use(
   session({
     resave: false,
     saveUninitialized: true,
-    secret: process.env["JWT_SECRET"],
+    secret: "secret",
   })
 );
 
@@ -35,14 +35,14 @@ opts.jwtFromRequest = function (req) {
   }
   return token;
 };
-opts.secretOrKey = process.env["JWT_SECRET"];
+opts.secretOrKey = "secret";
 
 passport.use(
   new JwtStrategy(opts, function (jwt_payload, done) {
     console.log("JWT BASED  VALIDATION GETTING CALLED");
     console.log("JWT", jwt_payload);
-    if (CheckUser(jwt_payload)) {
-      return done(null, jwt_payload);
+    if (CheckUser(jwt_payload.data)) {
+      return done(null, jwt_payload.data);
     } else {
       // user account doesnt exists in the DATA
       return done(null, false);
@@ -82,7 +82,7 @@ passport.use(
 );
 
 passport.serializeUser(function (user, cb) {
-  console.log("I should have to do that");
+  console.log("I should have to do that ");
   cb(null, user);
 });
 
@@ -96,12 +96,6 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  if (!req.query.redirect_url) {
-    res.status(400);
-    res.send("redirect_url query parameter missing");
-    return;
-  }
-  res.cookie("redirect_url", req.query.redirect_url);
   res.sendFile("login.html", { root: __dirname + "/public" });
 });
 
@@ -109,25 +103,14 @@ app.get("/auth/email", (req, res) => {
   res.sendFile("login_form.html", { root: __dirname + "/public" });
 });
 
-app.get("/auth/google", GoogleAuthenticator, function (req, res) {});
-
-function GoogleAuthenticator(req, res, next) {
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
-    state: req.cookies["redirect_url"],
-  })(req, res, next);
-  //^ call the middleware returned by passport.authenticate
-  // https://stackoverflow.com/a/27318966
-}
-
-app.get("/auth/facebook", FacebookAuthenticator, function (req, res) {});
-
-function FacebookAuthenticator(req, res, next) {
-  passport.authenticate("facebook", {
-    scope: "email",
-    state: req.cookies["redirect_url"],
-  })(req, res, next);
-}
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+app.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", { scope: "email" })
+);
 
 app.post("/auth/email", (req, res) => {
   if (CheckUser(req.body)) {
@@ -135,10 +118,10 @@ app.post("/auth/email", (req, res) => {
       {
         data: req.body,
       },
-      process.env["JWT_SECRET"],
+      "secret",
       { expiresIn: "1h" }
     );
-    res.cookie("jwt", token, { sameSite: 'none', secure: true});
+    res.cookie("jwt", token);
     res.send(`Log in success ${req.body.email}`);
   } else {
     res.send("Invalid login credentials");
@@ -169,18 +152,13 @@ app.get(
     FindOrCreate(user);
     let token = jwt.sign(
       {
-        displayName: user.displayName,
-        name: user.name,
-        email: user.email,
-        provider: user.provider,
-        iss: process.env["ISSUER"],
-        aud: process.env["AUDIENCE"],
+        data: user,
       },
-      process.env["JWT_SECRET"],
+      "secret",
       { expiresIn: "1h" }
     );
-    res.cookie("jwt", token, { sameSite: 'none', secure: true});
-    res.redirect(req.query.state);
+    res.cookie("jwt", token);
+    res.redirect("/");
   }
 );
 app.get(
@@ -199,18 +177,13 @@ app.get(
     FindOrCreate(user);
     let token = jwt.sign(
       {
-        displayName: user.displayName,
-        name: user.name,
-        email: user.email,
-        provider: user.provider,
-        iss: process.env["AUDIENCE"],
-        aud: process.env["ISSUER"],
+        data: user,
       },
-      process.env["JWT_SECRET"],
-      { expiresIn: "1h" }
+      "secret",
+      { expiresIn: 60 }
     );
-    res.cookie("jwt", token, { sameSite: 'none', secure: true});
-    res.redirect(req.query.state);
+    res.cookie("jwt", token);
+    res.redirect("/");
   }
 );
 
@@ -240,5 +213,5 @@ function CheckUser(input) {
 }
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log(`Server EGS listening on port ${port}`);
+  console.log(`Auth App Sever listening on port ${port}`);
 });

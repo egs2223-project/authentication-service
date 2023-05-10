@@ -1,5 +1,5 @@
-#To build: docker build -t egs-authentication-svc -f Dockerfile.auth .
-#To add to registry: sudo docker push jmuachifi/egs-authentication-svc:latest
+# To build: docker buildx build --platform linux/amd64 --network=host -t registry.deti:5000/egs-doctalk/egs-authentication-svc:v1 -f Dockerfile.auth .
+# To add to registry: docker push registry.deti:5000/egs-doctalk/egs-authentication-svc:v1
 
 FROM node:alpine
 
@@ -11,21 +11,21 @@ LABEL service="Google,Facebook Authentication"
 
 # Create app directory
 RUN mkdir /auth-service
-WORKDIR /authentication-service/auth-service
+WORKDIR /auth-service
 
 RUN apk update && apk upgrade && apk add --no-cache netcat-openbsd
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
-COPY ./authentication-service/auth-service/package.json ./authentication-service/auth-service/package-lock.json ./
-COPY ./authentication-service/auth-service/index.js  ./authentication-service/auth-service/public/  ./authentication-service/auth-service/.env ./auth-service/
+COPY ./auth-service/package.json ./auth-service/package-lock.json ./
+COPY ./auth-service/index.js  ./auth-service/public/  ./auth-service/.env ./auth-service/
 
 RUN npm install 
 
 # If you are building your code for production
 # RUN npm ci --only=production
 
-COPY ./authentication-service/auth-service .
+COPY ./auth-service .
 
 EXPOSE 5000
 ENTRYPOINT ["node", "index.js"]
