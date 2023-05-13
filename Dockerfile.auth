@@ -1,5 +1,5 @@
-#To build: docker build -t egs-authentication-svc -f Dockerfile.auth .
-#To add to registry: sudo docker push jmuachifi/egs-authentication-svc:latest
+# To build: docker buildx build --platform linux/amd64 --network=host -t registry.deti:5000/egs-doctalk/egs-authentication-svc:v1 -f authentication-service/Dockerfile.auth .
+# To add to registry: docker push registry.deti:5000/egs-doctalk/egs-authentication-svc:v1
 
 FROM node:alpine
 
