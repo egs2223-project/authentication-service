@@ -55,7 +55,7 @@ passport.use(
     {
       clientID: process.env["GOOGLE_CLIENT_ID"],
       clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
-      callbackURL: "http://localhost:5000/auth/google/callback",
+      callbackURL: "http://localhost:5800/auth/google/callback",
     },
     function (accessToken, refreshToken, profile, cb) {
       //console.log(accessToken, refreshToken, profile)
@@ -70,7 +70,7 @@ passport.use(
     {
       clientID: process.env["FACEBOOK_CLIENT_ID"],
       clientSecret: process.env["FACEBOOK_CLIENT_SECRET"],
-      callbackURL: "http://localhost:5000/auth/facebook/callback", // relative or absolute path
+      callbackURL: "http://localhost:5800/auth/facebook/callback", // relative or absolute path
       profileFields: ["id", "displayName", "email", "picture"],
     },
     function (accessToken, refreshToken, profile, cb) {
@@ -238,7 +238,7 @@ function CheckUser(input) {
   }
   return false;
 }
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5800;
 app.listen(port, () => {
   console.log(`Server EGS listening on port ${port}`);
 });

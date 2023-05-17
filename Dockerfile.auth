@@ -27,5 +27,5 @@ RUN npm install
 
 COPY ./authentication-service/auth-service .
 
-EXPOSE 5000
+EXPOSE 5800
 ENTRYPOINT ["node", "index.js"]
