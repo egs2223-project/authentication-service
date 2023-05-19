@@ -55,7 +55,7 @@ passport.use(
     {
       clientID: process.env["GOOGLE_CLIENT_ID"],
       clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
-      callbackURL: "http://localhost:5800/auth/google/callback",
+      callbackURL: "https://app-egs-doctalk.duckdns.org/auth/google/callback",
     },
     function (accessToken, refreshToken, profile, cb) {
       //console.log(accessToken, refreshToken, profile)
@@ -70,7 +70,7 @@ passport.use(
     {
       clientID: process.env["FACEBOOK_CLIENT_ID"],
       clientSecret: process.env["FACEBOOK_CLIENT_SECRET"],
-      callbackURL: "http://localhost:5800/auth/facebook/callback", // relative or absolute path
+      callbackURL: "https://app-egs-doctalk.duckdns.org/auth/facebook/callback", // relative or absolute path
       profileFields: ["id", "displayName", "email", "picture"],
     },
     function (accessToken, refreshToken, profile, cb) {
