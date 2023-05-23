@@ -6,9 +6,9 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const session = require("express-session");
 const dotenv = require("dotenv");
-dotenv.config();
 
 const DATA = [{ email: "test@gmail.com", password: "1234" }];
+const REDIRECT_URL = process.env.REDIRECT_URL;
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -55,7 +55,7 @@ passport.use(
     {
       clientID: process.env["GOOGLE_CLIENT_ID"],
       clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
-      callbackURL: "http://localhost:5800/auth/google/callback",
+      callbackURL: `${REDIRECT_URL}/auth/google/callback`,
     },
     function (accessToken, refreshToken, profile, cb) {
       //console.log(accessToken, refreshToken, profile)
@@ -70,7 +70,7 @@ passport.use(
     {
       clientID: process.env["FACEBOOK_CLIENT_ID"],
       clientSecret: process.env["FACEBOOK_CLIENT_SECRET"],
-      callbackURL: "http://localhost:5800/auth/facebook/callback", // relative or absolute path
+      callbackURL: `${REDIRECT_URL}/auth/facebook/callback`, // relative or absolute path
       profileFields: ["id", "displayName", "email", "picture"],
     },
     function (accessToken, refreshToken, profile, cb) {
@@ -239,6 +239,6 @@ function CheckUser(input) {
   return false;
 }
 const port = process.env.PORT || 5800;
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server EGS listening on port ${port}`);
 });
