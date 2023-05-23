@@ -6,6 +6,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const session = require("express-session");
 const dotenv = require("dotenv");
+dotenv.config();
 
 const DATA = [{ email: "test@gmail.com", password: "1234" }];
 const REDIRECT_URL = process.env.REDIRECT_URL;
