@@ -9,9 +9,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const DATA = [{ email: "test@gmail.com", password: "1234" }];
-const REDIRECT_URL = process.env.REDIRECT_URL;
 
 const app = express();
+app.enable('trust proxy');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -56,7 +56,7 @@ passport.use(
     {
       clientID: process.env["GOOGLE_CLIENT_ID"],
       clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
-      callbackURL: `${REDIRECT_URL}/auth/google/callback`,
+      callbackURL: `/auth/google/callback`,
     },
     function (accessToken, refreshToken, profile, cb) {
       //console.log(accessToken, refreshToken, profile)
@@ -71,7 +71,7 @@ passport.use(
     {
       clientID: process.env["FACEBOOK_CLIENT_ID"],
       clientSecret: process.env["FACEBOOK_CLIENT_SECRET"],
-      callbackURL: `${REDIRECT_URL}/auth/facebook/callback`, // relative or absolute path
+      callbackURL: `/auth/facebook/callback`, // relative or absolute path
       profileFields: ["id", "displayName", "email", "picture"],
     },
     function (accessToken, refreshToken, profile, cb) {
