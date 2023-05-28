@@ -8,6 +8,7 @@ const session = require("express-session");
 const dotenv = require("dotenv");
 dotenv.config();
 
+
 const DATA = [{ email: "test@gmail.com", password: "1234" }];
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(
     secret: process.env["JWT_SECRET"],
   })
 );
+
 
 // Add this line below
 const jwt = require("jsonwebtoken");
@@ -239,6 +241,37 @@ function CheckUser(input) {
   }
   return false;
 }
+
+//Configuration of Prometheus Client
+const prometheus = require('prom-client');
+const registry = new prometheus.Registry();
+
+const authenticationCounter = new prometheus.Counter({
+  name: "authentication",
+  help: "Total number of authentications",
+  labelNames: ["strategy"],
+});
+
+const authenticationErrorCounter = new prometheus.Counter({
+  name: "authentication_errors_total",
+  help: "Total number of authentication errors",
+  labelNames: ["strategy"],
+});
+
+registry.registerMetric(authenticationCounter);
+registry.registerMetric(authenticationErrorCounter);
+
+app.get("/metrics", async (req, res) => {
+  try {
+    res.set("Content-Type", prometheus.register.contentType);
+    res.end(await prometheus.register.metrics());
+  } catch (ex) {
+    res.status(500).send(ex.toString());
+  }
+});
+
+
+
 const port = process.env.PORT || 5800;
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server EGS listening on port ${port}`);
